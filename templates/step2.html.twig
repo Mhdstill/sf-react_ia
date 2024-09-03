@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mx-auto my-10">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        {{ form_start(form) }}
+
+        <div id="roles-wrapper">
+            {% for role in form.roles %}
+                <div class="role-item flex items-center mb-4">
+                    {{ form_widget(role, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+                    <button type="button" class="remove-role bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2">-</button>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" id="add-role" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">+</button>
+
+        <div class="flex justify-between">
+            <button type="button" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="changeStep({{ currentStep - 1 }})">Previous</button>
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Next</button>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        let rolesWrapper = document.getElementById('roles-wrapper');
+        let addRoleButton = document.getElementById('add-role');
+
+        addRoleButton.addEventListener('click', function () {
+            let newRoleItem = document.createElement('div');
+            newRoleItem.classList.add('role-item', 'flex', 'items-center', 'mb-4');
+
+            let newRoleField = document.createElement('input');
+            newRoleField.setAttribute('type', 'text');
+            newRoleField.setAttribute('name', '{{ form.roles.vars.prototype.name }}[' + document.querySelectorAll('.role-item').length + ']');
+            newRoleField.setAttribute('class', 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline');
+            newRoleItem.appendChild(newRoleField);
+
+            let removeRoleButton = document.createElement('button');
+            removeRoleButton.setAttribute('type', 'button');
+            removeRoleButton.classList.add('remove-role', 'bg-red-500', 'hover:bg-red-700', 'text-white', 'font-bold', 'py-2', 'px-4', 'rounded', 'ml-2');
+            removeRoleButton.textContent = '-';
+            newRoleItem.appendChild(removeRoleButton);
+
+            rolesWrapper.appendChild(newRoleItem);
+
+            removeRoleButton.addEventListener('click', function () {
+                newRoleItem.remove();
+            });
+        });
+
+        document.querySelectorAll('.remove-role').forEach(function (button) {
+            button.addEventListener('click', function () {
+                this.parentElement.remove();
+            });
+        });
+    });
+</script>
+{% endblock %}

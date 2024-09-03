@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container mx-auto my-10">
+    <div class="max-w-3xl mx-auto">
+        <!-- Progress Bar -->
+        <div class="flex justify-between mb-4">
+            {% for step in steps %}
+                <div class="w-full {{ loop.index <= currentStep ? 'bg-blue-500' : 'bg-gray-300' }} h-1 mx-1"></div>
+            {% endfor %}
+        </div>
+
+        <!-- Step Form -->
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+            {{ form_start(form) }}
+
+            {% for field in form %}
+                <div class="mb-4">
+                    {{ form_label(field, null, {'label_attr': {'class': 'block text-gray-700 text-sm font-bold mb-2'}}) }}
+                    {{ form_widget(field, {'attr': {'class': 'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'}}) }}
+                    {{ form_errors(field, {'attr': {'class': 'text-red-500 text-xs italic'}}) }}
+                </div>
+            {% endfor %}
+
+            <div class="flex justify-between">
+                {% if currentStep > 1 %}
+                    <button type="button" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="changeStep({{ currentStep - 1 }})">Previous</button>
+                {% endif %}
+
+                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
+
+                {# 
+                {% if currentStep < steps|length %}
+                    <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" onclick="changeStep({{ currentStep + 1 }})">Next</button>
+                {% else %}
+                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Submit</button>
+                {% endif %}
+                #}
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+
+<script>
+    function changeStep(step) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('step', step);
+        window.location.href = url.href;
+    }
+</script>
+{% endblock %}
